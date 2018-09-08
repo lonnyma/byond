@@ -1,7 +1,7 @@
 /* Copyright (c) 2018 白羊人工智能在线技术. All rights reserved.
  * http://www.byond.cn
  */
-package cn.lenya.soft.common.bean;
+package cn.lenya.soft.core.bean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import cn.lenya.soft.common.utils.DateUtil;
+import cn.lenya.soft.core.common.utils.DateUtil;
 
 /**
  * 作用：框架层基类，该类负责对象的封装
