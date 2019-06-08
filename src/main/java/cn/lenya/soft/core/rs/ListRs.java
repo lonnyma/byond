@@ -18,6 +18,4 @@ public class ListRs<T> extends BaseRs {
 		this.resultList = resultList;
 	}
 
-
-
 }
