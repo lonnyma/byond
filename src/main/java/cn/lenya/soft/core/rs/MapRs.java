@@ -16,9 +16,5 @@ public class MapRs<T> extends BaseRs {
 	public void setMap(Map<String, T> map) {
 		this.map = map;
 	}
-
-	
-
-	
-	
+		
 }

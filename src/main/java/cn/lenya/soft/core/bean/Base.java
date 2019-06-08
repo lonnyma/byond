@@ -5,21 +5,20 @@ package cn.lenya.soft.core.bean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import cn.lenya.soft.core.common.utils.DateUtil;
-
 /**
  * 作用：框架层基类，该类负责对象的封装
  * 
- * @author maql
+ * @author M.Q
  *
  */
 public abstract class Base {
@@ -70,18 +69,11 @@ public abstract class Base {
 					}
 				}
 			}
-
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return object;
-
 	}
 
 	/**
@@ -98,8 +90,7 @@ public abstract class Base {
 			Method[] m = c.getMethods();
 			for (int i = 0; i < m.length; i++) {
 				String method = m[i].getName();
-				if (method.startsWith("get")) {
-					try {
+				if (method.startsWith("get")) {					
 						Object value = m[i].invoke(obj);
 						if (value != null ) {
 							String key = method.substring(3);
@@ -107,10 +98,7 @@ public abstract class Base {
 							if(!"class".equals(key)) {
 								map.put(key, value);
 							}
-						}
-					} catch (Exception e) {
-						System.out.println("error:" + method);
-					}
+						}					
 				}
 			}
 		} catch (Exception e) {
@@ -140,11 +128,11 @@ public abstract class Base {
 				method.invoke(invokeObj, obj == null ? "" : obj);
 				return;
 			} else if (clazz.isAssignableFrom(Date.class)) {
-				method.invoke(invokeObj, DateUtil.toJavaUtilDate(obj == null ? "" : obj.toString()));
+				method.invoke(invokeObj, toJavaUtilDate(obj == null ? "" : obj.toString()));
 				return;
 			} else if (clazz.isAssignableFrom(Timestamp.class)) {
 				method.invoke(invokeObj,
-						new Timestamp(DateUtil.toJavaUtilDate(obj == null ? "" : obj.toString()).getTime()));
+						new Timestamp(toJavaUtilDate(obj == null ? "" : obj.toString()).getTime()));
 				return;
 			} else if (clazz.isAssignableFrom(Long.class)) {
 				method.invoke(invokeObj, new Long(obj == null ? "0" : obj.toString()));
@@ -172,19 +160,29 @@ public abstract class Base {
 				}
 				return;
 			}
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * 功能描述：字符串转换成日期
+	 * 
+	 * @param date String 日期字符串
+	 * @return java.util.Date 类型
+	 */
+	private  Date toJavaUtilDate(String date) {
+		if (null == date || "".equals(date))
+			return null;
+		Date mydate = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			mydate = sdf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return mydate;
+	}
 	/**
 	 * 功能描述：得到set方法名
 	 * 
@@ -202,7 +200,7 @@ public abstract class Base {
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private static String getGetterMethodName(String propName) {
+	private  String getGetterMethodName(String propName) {
 		return "get" + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 	}
 
@@ -231,7 +229,8 @@ public abstract class Base {
 				method = clazz.getDeclaredMethod(methodName, parameterTypes);
 				return method;
 			} catch (Exception e) {
-			}
+				e.printStackTrace();
+			}			
 		}
 		return null;
 	}
@@ -243,7 +242,7 @@ public abstract class Base {
 	 * @param clss
 	 * @return
 	 */
-	protected static <T> Map<String, Field> getAllFields(Map<String, Field> flist, Class<T> clss) {
+	protected static  <T> Map<String, Field> getAllFields(Map<String, Field> flist, Class<T> clss) {
 		if (null == clss)
 			return null;
 		Class<?> claa = clss.getSuperclass();
@@ -264,7 +263,7 @@ public abstract class Base {
 	 * @param clss
 	 * @return
 	 */
-	private static <T> Set<String> getAllFieldsName(Set<String> flist, Class<T> clss) {
+	private  <T> Set<String> getAllFieldsName(Set<String> flist, Class<T> clss) {
 		if (null == clss)
 			return null;
 		Class<?> claa = clss.getSuperclass();

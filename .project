@@ -3,6 +3,7 @@
 	<name>lenya.core</name>
 	<comment></comment>
 	<projects>
+		<project>lenya.dt</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
